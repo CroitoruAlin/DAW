@@ -1,0 +1,38 @@
+﻿@model Facebook.Models.Group
+@{
+    ViewBag.Title = "Show";
+}
+
+<h2>@Model.Name. Founded by: @Model.Founder.UserDetails.Firstname</h2>
+
+@foreach (var message in ViewBag.messages)
+{
+<div class="row border mt-3">
+    <div class="col-sm-10">
+        <div class="tab-pane">
+            <div class="panel-heading">
+                <div class="card-title">
+                    <b>@message.Owner.UserDetails.Firstname</b>
+                    added a message.
+                </div>
+                <h6>@message.CreationDate</h6>
+            </div>
+        </div>
+        <div class="panel-body">
+            <p>@message.Content</p>
+            </div>
+        </div>
+    </div>
+
+}
+<form action="@Url.Action("CreateMessage","Groups")" method="post">
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <button class="btn btn-outline-secondary" type="submit">SendMessage</button>
+            <div class="col-md-10">
+                <input type="text" name="Message" class="form-control" />
+                <input type="hidden" name="Id" value="@Model.Id" />
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,59 @@
+﻿@model System.Collections.Generic.IEnumerable<Facebook.Models.Group>
+@{
+    ViewBag.Title = "Index";
+}
+<h3>Search Groups</h3>
+<form action="@Url.Action("Index","Groups")" method="post">
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <button class="btn btn-outline-secondary" type="submit">Search</button>
+            <div class="col-md-10">
+                <input type="text" name="Name" class="form-control" />
+            </div>
+        </div>
+    </div>
+</form>
+@if (ViewBag.groups != null)
+{
+    foreach (var group in ViewBag.groups)
+    {
+
+        <div class="panel-heading">
+            <i class="glyphicon glyphicon-globe"></i>
+            <a class="btn btn-outline-secondary" href="Groups/Show/@group.Id">@group.Name</a>
+        </div>
+        <form method="post" action="@Url.Action("SendRequest","Groups",new { Id = group.Id })">
+            <div class="row">
+                <input type="submit" class="btn btn-outline-success" value="Send Request" />
+            </div>
+        </form>
+    }
+}
+<h3>Your Groups</h3>
+<div class="container border">
+    @for (int i = 0; i < Model.Count(); i++)
+    {
+        <div class="row">
+            <a class="btn btn-outline-secondary" href="/Groups/Show/@Model.ElementAt(i).Id">@Model.ElementAt(i).Name</a>
+        </div>
+    }
+    <div class="row">
+        <a class="btn btn-outline-primary" href="Groups/Create/">Create a group</a>
+    </div>
+</div>
+<h3>Requests</h3>
+<div class="container border">
+    @foreach (var request in ViewBag.requests)
+    {
+        <form method="post" action="@Url.Action("Accept","Groups",new { Id = request.Id })">
+            <div class="row">
+                <p>
+                    @request.User.UserDetails.Firstname wants to join your group
+                    @request.Group.Name
+                </p>
+                <input type="submit" class="btn btn-outline-success" value="Accept Request" />
+            </div>
+        </form>
+    }
+</div>
+

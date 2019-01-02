@@ -1,0 +1,33 @@
+﻿@model Facebook.Models.Album
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>@Model.Name</h2>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            @if (Model.Posts != null)
+            {
+                foreach (var post in @Model.Posts)
+                {
+                    <div>
+                        <i class="glyphicon glyphicon-time"> @post.CreationDate</i><br />
+                        <a class="btn btn-outline-secondary" href="@Url.Action("Index","Posts",new { Id = post.Id })" >View Post</a>
+                        <img src="@Url.Action("GetImage","Posts",new { filePath = post.Path })" class="img-fluid" alt="Responsive image">
+                    </div>
+                }
+            }
+        </div>
+    </div>
+    @if (ViewBag.flag == true)
+    {
+    <div class="row">
+        <div class="col">
+            <a href="@Url.Action("Create", "Posts", new { albumId = Model.Id })" class="btn btn-outline-primary">Create Post</a>
+        </div>
+    </div>
+    }
+</div>
+
+

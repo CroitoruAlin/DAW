@@ -1,0 +1,89 @@
+﻿@model Facebook.Models.PersonalModel
+@{
+    ViewBag.Title = "Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using (Html.BeginForm("SetPrivateProfile", "Users", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    <div id="user-profile-2" class="user-profile">
+        <div class="tabbable">
+
+
+            <div class="tab-content no-border padding-24">
+                <div id="home" class="tab-pane in active">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-3 center">
+                            <span class="profile-picture">
+                                <img class="editable img-responsive" alt=" Avatar" id="avatar2" src="@Url.Action("UsersPhotos", "Users",new { userId = Model.id })">
+                            </span>
+
+                            <div class="space space-4"></div>
+                            <div class="panel-heading">@Model.Firstname @Model.Lastname</div>
+                            <div class="panel-body">
+                                <i class="glyphicon glyphicon-envelope"></i> Email:
+                                <span class="label label-default">@Model.Email</span>
+                                <br /><br />
+
+
+                                @if (ViewBag.flag == null)
+                                {
+                                    <div onclick="$('form').submit()">
+                                        <i class="glyphicon glyphicon-user"></i>Private Profile
+                                        @Html.CheckBoxFor(m => m.check, new { @checked = Model.check })
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        @if (ViewBag.flag2 == true || ViewBag.flag == null || ViewBag.flag == false)
+                        {
+                            <div class="col">
+                                @foreach (var album in ViewBag.albums)
+                                {
+                                    <div class="panel-heading">
+                                        <i class="glyphicon glyphicon-folder-close"></i>
+                                        <a class="btn btn-outline-secondary" href="/Albums/Index/@album.Id">@album.Name</a>
+                                    </div>
+
+                                }
+                            </div>
+                        }
+                        @if (ViewBag.flag == null)
+                        {
+
+                            <div>
+
+                                <a href="/Albums/Create" class="btn btn-outline-primary">Create Album</a>
+
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+@if (ViewBag.flag2 != true && ViewBag.flag2 != null)
+{
+    <div>
+        <form action="/Users/CreateFriendRequest/@Model.id" method="post">
+            @Html.HiddenFor(m => m.id)
+            <button type="submit" class="btn btn-outline-primary">Send FriendRequest</button>
+        </form>
+    </div>
+}
+@if (ViewBag.flag2 == true || ViewBag.flag == false)
+{
+    <div >
+    
+            <a href ="@Url.Action("Create","Messages",new { Id = Model.id })" 
+               class="btn btn-outline-secondary">Send Message</a>
+
+
+        </div>
+    }
+
+
+
+

@@ -12,7 +12,8 @@ namespace Facebook
         public void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);
-            createAdminUserAndApplicationRoles();
+            createAdminUserAndApplicationRoles();
+
         }
         private void createAdminUserAndApplicationRoles()
         {
@@ -32,6 +33,8 @@ namespace Facebook
                 var user = new ApplicationUser();
                 user.UserName = "admin@admin.com";
                 user.Email = "admin@admin.com";
+                var userDetails = new UserDetails("admin", "admin",true);
+                user.UserDetails = userDetails;
                 var adminCreated = UserManager.Create(user, "Administrator1!");
                 if (adminCreated.Succeeded)
                 {

@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Facebook.Models;
+using System.IO;
 
 namespace Facebook.Controllers
 {
@@ -147,11 +148,27 @@ namespace Facebook.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model)
+        public async Task<ActionResult> Register([Bind(Exclude = "UserPhoto")]RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                string path = HttpContext.Server.MapPath(@"~/Content/Images");
+                string fileName = Path.Combine(path, model.Email + ".jpg");
+                var userDetails = new UserDetails(model.Firstname, model.Lastname,false);
+
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, UserDetails = userDetails };
+                if (Request.Files.Count > 0)
+                {
+                    HttpPostedFileBase file = Request.Files["UserPhoto"];
+                    if (file.ContentLength > 0)
+                    {
+
+                        file.SaveAs(fileName);
+                        user.UserPhoto = model.Email + ".jpg";
+                    }
+                }
+                
+               
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
